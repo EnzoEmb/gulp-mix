@@ -1,8 +1,11 @@
 body {
-  border: 4px solid lightcoral; }
+  border: 4px solid lightcoral;
+}
 
 .hola {
-  color: green; }
+  color: green;
+}
 
 .hola p {
-  color: red; }
+  color: red;
+}
