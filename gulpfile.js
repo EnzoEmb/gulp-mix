@@ -49,8 +49,16 @@ const purgecss = require('gulp-purgecss');
 const gulpif = require('gulp-if');
 const fileinclude = require('gulp-file-include');
 const plumber = require('gulp-plumber');
+const npmDist = require('gulp-npm-dist');
+
 
 var src;
+
+
+gulp.task('copy:vendors', function() {
+	return gulp.src(npmDist(), {base:'./node_modules/'})
+			.pipe(gulp.dest('./src/vendor'));
+});
 
 
 /**
@@ -258,7 +266,7 @@ gulp.task('browser:reload', function browser_reload(done) {
 /**
  * Development
  */
-gulp.task('dev', gulp.series(['clean:build', 'js', 'sass', 'css', 'copy:data', 'copy:img', 'copy:others', 'browser:init'], function dev(done) {
+gulp.task('dev', gulp.series(['clean:build', 'copy:vendors', 'js', 'sass', 'css', 'copy:data', 'copy:img', 'copy:others', 'browser:init'], function dev(done) {
 
 	gulp.watch(['src/**/*.scss'], gulp.series(['sass']));
 	gulp.watch(['src/**/*.css'], gulp.series(['css', 'browser:stream']));

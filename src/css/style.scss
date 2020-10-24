@@ -1,13 +1,8 @@
-@import 'src/vars';
+@import "src/vars";
+@import "src/footer";
+@import "src/header";
 
-body{
-    border: 4px solid lightcoral;
-}
-.hola{
-    color: green;
-}
-.hola{
-    p{
-        color: red;
-    }
+body {
+    font-family: $font-default;
+    scroll-behavior: smooth;
 }
