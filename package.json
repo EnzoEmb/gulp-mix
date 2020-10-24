@@ -23,7 +23,9 @@
     "gulp-cache-bust": "^1.4.1",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
+    "gulp-copy-vendor": "0.0.3",
     "gulp-file-include": "^2.2.2",
+    "gulp-html-partial": "^1.0.1",
     "gulp-htmlmin": "^5.0.1",
     "gulp-if": "^3.0.0",
     "gulp-imagemin": "^6.2.0",
@@ -33,5 +35,8 @@
     "gulp-terser": "^1.2.0",
     "gulp-uglify": "^3.0.1",
     "gulp-zip": "^5.0.2"
+  },
+  "dependencies": {
+    "normalize.css": "^8.0.1"
   }
 }

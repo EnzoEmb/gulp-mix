@@ -1,7 +1,7 @@
 /**
  * Setup
  */
-const PATH = "http://localhost/layton/build";
+const PATH = "http://gulp-mix.test/";
 const PORT = 3000;
 const AUTORELOAD = true;
 const AUTOOPEN = false;
