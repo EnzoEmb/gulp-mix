@@ -43,21 +43,29 @@ const zip = require('gulp-zip');
 const log = require('fancy-log');
 const chalk = require('chalk');
 const htmlmin = require('gulp-htmlmin');
-const imagemin = require('gulp-imagemin');
+// const imagemin = require('gulp-imagemin');
 const cachebust = require('gulp-cache-bust');
 const purgecss = require('gulp-purgecss');
 const gulpif = require('gulp-if');
-const fileinclude = require('gulp-file-include');
+// const fileinclude = require('gulp-file-include');
 const plumber = require('gulp-plumber');
 const npmDist = require('gulp-npm-dist');
-
+const htmlPartial = require('gulp-html-partial');
 
 var src;
 
 
-gulp.task('copy:vendors', function() {
-	return gulp.src(npmDist(), {base:'./node_modules/'})
-			.pipe(gulp.dest('./src/vendor'));
+gulp.task('html:partials', function () {
+	return gulp.src(['src/*.html'])
+		.pipe(htmlPartial({
+			basePath: 'src/partials/'
+		}))
+		.pipe(gulp.dest('build'));
+});
+
+gulp.task('copy:vendors', function () {
+	return gulp.src(npmDist(), { base: './node_modules/' })
+		.pipe(gulp.dest('./src/vendor'));
 });
 
 
@@ -142,7 +150,7 @@ gulp.task('js', function (done) {
 			log(chalk.gray.bold('[JS] Compilado ' + config.js[name] + ' => ') + chalk.bgWhite.black.bold(name + '.js'));
 			return gulp.src(config.js[name], { allowEmpty: true })
 				.pipe(concat(name + '.js'))
-				.pipe(gulpif( MINIFY_JS, gulpif(ES6, terser(), uglify() )))
+				.pipe(gulpif(MINIFY_JS, gulpif(ES6, terser(), uglify())))
 				.pipe(gulp.dest('./build/js/'))
 				.pipe(bs.stream({ match: "**/*.js" }));
 		});
@@ -176,9 +184,12 @@ gulp.task('copy:data', function copy_data(done) {
 		.pipe(plumber({
 			errorHandler: customErrorHandler
 		}))
-		.pipe(gulpif(PARTIALS_HTML, fileinclude({
-			prefix: '@@'
-		})))
+		// .pipe(gulpif(PARTIALS_HTML, fileinclude({
+		// 	prefix: '@@'
+		// })))
+		.pipe(htmlPartial({
+			basePath: 'src/partials/'
+		}))
 		.pipe(gulpif(MINIFY_HTML, htmlmin({
 			collapseWhitespace: true,
 			removeComments: true,
@@ -194,9 +205,9 @@ gulp.task('copy:data', function copy_data(done) {
 
 gulp.task('copy:img', gulp.series('clean:img', function copy_images(done) {
 	gulp.src('src/img/**/*')
-	.pipe(plumber({
-		errorHandler: customErrorHandler
-	}))
+		.pipe(plumber({
+			errorHandler: customErrorHandler
+		}))
 		// .pipe(imagemin([
 		// 	imagemin.gifsicle({ interlaced: true }),
 		// 	imagemin.jpegtran({ progressive: true }),
