@@ -51,7 +51,8 @@ const gulpif = require('gulp-if');
 const plumber = require('gulp-plumber');
 const npmDist = require('gulp-npm-dist');
 // const htmlPartial = require('gulp-html-partial');
-const chePartial = require('./index.js')
+// const chePartial = require('../')
+const chePartial = require('./che-partials');
 
 var src;
 
@@ -183,12 +184,7 @@ gulp.task('copy:data', function copy_data(done) {
 		.pipe(plumber({
 			errorHandler: customErrorHandler
 		}))
-		// .pipe(gulpif(PARTIALS_HTML, fileinclude({
-		// 	prefix: '@@'
-		// })))
-		// .pipe(htmlPartial({
-		// 	basePath: 'src/partials/'
-		// }))
+		.pipe(chePartial())
 		.pipe(gulpif(MINIFY_HTML, htmlmin({
 			collapseWhitespace: true,
 			removeComments: true,
@@ -197,6 +193,7 @@ gulp.task('copy:data', function copy_data(done) {
 		.pipe(gulpif(CACHE_BUST, cachebust({
 			type: 'timestamp'
 		})))
+
 		.pipe(gulp.dest('./build/'));
 	log(chalk.white.bgHex('#48a54b').bold('✓ Compilado HTML/PHP'));
 	done();
