@@ -64,7 +64,7 @@ function replacePartials(file) {
       var src_file = file.base + '/' + element.parameters.src
       if (fs.existsSync(src_file)) {
         var data = fs.readFileSync(src_file).toString();
-        data = replaceParameters(data, element.parameters), element.content;
+        data = replaceParameters(data, element.parameters);
         data = replaceContent(data, element.content);
         html = html.replace(element.tag, data)
       } else {
