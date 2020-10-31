@@ -1,18 +1,18 @@
 {
-  "name": "layton-boilerplate",
-  "version": "1.0.0",
-  "description": "Layton Boilerplate",
+  "name": "gulp-mix",
+  "version": "0.1.0",
+  "description": "Gulp Starter Boilerplate with custom HTML elements",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://Layt@bitbucket.org/Layt/layton.git"
+    "url": "git+https://github.com/EnzoEmb/gulp-mix.git"
   },
   "author": "Enzo Vergara",
-  "license": "ISC",
-  "homepage": "https://bitbucket.org/Layt/layton",
+  "license": "MIT",
+  "homepage": "https://github.com/EnzoEmb/gulp-mix",
   "devDependencies": {
     "browser-sync": "^2.26.13",
     "chalk": "^2.4.2",
@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "bootstrap": "^4.5.3",
-    "normalize.css": "^8.0.1"
+    "normalize.css": "^8.0.1",
+    "through2": "^4.0.2"
   }
 }

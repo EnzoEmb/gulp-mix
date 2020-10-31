@@ -50,16 +50,15 @@ const gulpif = require('gulp-if');
 // const fileinclude = require('gulp-file-include');
 const plumber = require('gulp-plumber');
 const npmDist = require('gulp-npm-dist');
-const htmlPartial = require('gulp-html-partial');
+// const htmlPartial = require('gulp-html-partial');
+const chePartial = require('./index.js')
 
 var src;
 
 
 gulp.task('html:partials', function () {
 	return gulp.src(['src/*.html'])
-		.pipe(htmlPartial({
-			basePath: 'src/partials/'
-		}))
+		.pipe(chePartial())
 		.pipe(gulp.dest('build'));
 });
 
@@ -187,9 +186,9 @@ gulp.task('copy:data', function copy_data(done) {
 		// .pipe(gulpif(PARTIALS_HTML, fileinclude({
 		// 	prefix: '@@'
 		// })))
-		.pipe(htmlPartial({
-			basePath: 'src/partials/'
-		}))
+		// .pipe(htmlPartial({
+		// 	basePath: 'src/partials/'
+		// }))
 		.pipe(gulpif(MINIFY_HTML, htmlmin({
 			collapseWhitespace: true,
 			removeComments: true,
