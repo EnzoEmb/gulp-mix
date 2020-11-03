@@ -1,0 +1,29 @@
+{
+
+  "build_folder": "./build",
+  "src_folder": "./src",
+  "url": "http://gulp-mix.test/",
+  "port": 3000,
+  "autoreload": true,
+  "autoopen": true,
+
+
+  "minify_html": true,
+  "minify_js": true,
+  "minify_css": true,
+  "cache_bust": true,
+  "autoprefix_css": true,
+
+
+  "js_bundles": {
+    "vendor": [
+      "src/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"
+    ]
+  },
+  "css_bundles": {
+    "vendor": [
+      "src/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"
+    ]
+  }
+
+}
