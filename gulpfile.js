@@ -13,6 +13,7 @@ const COPY_FOLDERS = [
 
 
 /**
+ * 
  * Dependencias
  */
 const gulp = require('gulp');
@@ -28,48 +29,21 @@ const zip = require('gulp-zip');
 const log = require('fancy-log');
 const chalk = require('chalk');
 const htmlmin = require('gulp-htmlmin');
-// const imagemin = require('gulp-imagemin');
 const cachebust = require('gulp-cache-bust');
 const purgecss = require('gulp-purgecss');
 const gulpif = require('gulp-if');
-// const fileinclude = require('gulp-file-include');
 const plumber = require('gulp-plumber');
 const npmDist = require('gulp-npm-dist');
-// const htmlPartial = require('gulp-html-partial');
-// const chePartial = require('../')
-// const chePartial = require('./che-partials');
 const chePartial = require('gulp-che-partial');
-
 const MIX = require('./mix.config.json');
-
-
 
 var src;
 
 
-gulp.task('html:partials', function () {
-	return gulp.src(['src/*.html'])
-		.pipe(chePartial())
-		.pipe(gulp.dest('build'));
-});
-
-gulp.task('copy:vendors', function () {
-	return gulp.src(npmDist(), { base: './node_modules/' })
-		.pipe(gulp.dest('./src/vendor'));
-});
 
 
 /**
- * Manejo de errores
- */
-function customErrorHandler(error) {
-	log(chalk.white.bgRedBright.bold('Error en ' + error.plugin + ': ' + error.message));
-	this.emit('end');
-}
-
-
-
-/**
+ * 
  * Cleaning
  */
 gulp.task('clean:build', function clean_build() {
@@ -94,8 +68,95 @@ gulp.task('clean:img', function clean_img() {
 
 
 
+
+
+
 /**
- * Tasks
+ * 
+ * Partials
+ */
+gulp.task('html:partials', function () {
+	return gulp.src(['src/*.html'])
+		.pipe(chePartial())
+		.pipe(gulp.dest('build'));
+});
+
+
+
+
+
+
+/**
+ * 
+ * Copy
+ */
+gulp.task('copy:vendors', function () {
+	return gulp.src(npmDist(), { base: './node_modules/' })
+		.pipe(gulp.dest('./src/vendor'));
+});
+gulp.task('copy:others', function copy_others(done) {
+	gulp.src(COPY_FOLDERS, {
+		base: 'src'
+	})
+		.pipe(gulp.dest('./build/'));
+	done();
+});
+
+gulp.task('copy:data', function copy_data(done) {
+	gulp.src(['src/**/*.html', 'src/**/*.php', '!src/partials/**/*'])
+		.pipe(plumber({
+			errorHandler: customErrorHandler
+		}))
+		.pipe(chePartial())
+		.pipe(gulpif(MIX.minify_html, htmlmin({
+			collapseWhitespace: true,
+			removeComments: true,
+			removeScriptTypeAttributes: true,
+		})))
+		.pipe(gulpif(MIX.cache_bust, cachebust({
+			type: 'timestamp'
+		})))
+
+		.pipe(gulp.dest('./build/'));
+	log(chalk.white.bgHex('#48a54b').bold('✓ Compilado HTML/PHP'));
+	done();
+});
+
+gulp.task('copy:img', gulp.series('clean:img', function copy_images(done) {
+	gulp.src('src/img/**/*')
+		.pipe(plumber({
+			errorHandler: customErrorHandler
+		}))
+		.pipe(gulp.dest('build/img'));
+	log(chalk.white.bgHex('#48a54b').bold('✓ Copiado IMG'));
+	done();
+}));
+
+
+
+
+
+
+/**
+ * 
+ * Manejo de errores
+ */
+function customErrorHandler(error) {
+	log(chalk.white.bgRedBright.bold('Error en ' + error.plugin + ': ' + error.message));
+	this.emit('end');
+}
+
+
+
+
+
+
+
+
+/**
+ * 
+ * 
+ * Main Tasks
  */
 gulp.task('css', function (done) {
 	if (BUNDLE_CSS) {
@@ -158,58 +219,6 @@ gulp.task('js', function (done) {
 
 
 
-/**
- * Copia de assets al build
- */
-gulp.task('copy:others', function copy_others(done) {
-	gulp.src(COPY_FOLDERS, {
-		base: 'src'
-	})
-		.pipe(gulp.dest('./build/'));
-	done();
-});
-
-gulp.task('copy:data', function copy_data(done) {
-	gulp.src(['src/**/*.html', 'src/**/*.php', '!src/partials/**/*'])
-		.pipe(plumber({
-			errorHandler: customErrorHandler
-		}))
-		.pipe(chePartial())
-		.pipe(gulpif(MIX.minify_html, htmlmin({
-			collapseWhitespace: true,
-			removeComments: true,
-			removeScriptTypeAttributes: true,
-		})))
-		.pipe(gulpif(MIX.cache_bust, cachebust({
-			type: 'timestamp'
-		})))
-
-		.pipe(gulp.dest('./build/'));
-	log(chalk.white.bgHex('#48a54b').bold('✓ Compilado HTML/PHP'));
-	done();
-});
-
-gulp.task('copy:img', gulp.series('clean:img', function copy_images(done) {
-	gulp.src('src/img/**/*')
-		.pipe(plumber({
-			errorHandler: customErrorHandler
-		}))
-		// .pipe(imagemin([
-		// 	imagemin.gifsicle({ interlaced: true }),
-		// 	imagemin.jpegtran({ progressive: true }),
-		// 	imagemin.optipng({ optimizationLevel: 7 }),
-		// 	imagemin.svgo({
-		// 		plugins: [
-		// 			{ removeViewBox: true },
-		// 			{ cleanupIDs: false }
-		// 		]
-		// 	})
-		// ]))
-		.pipe(gulp.dest('build/img'));
-	log(chalk.white.bgHex('#48a54b').bold('✓ Copiado IMG'));
-	done();
-}));
-
 
 /**
  * SASS
@@ -230,9 +239,14 @@ gulp.task('sass', gulp.series(function compile_sass(done) {
 
 
 
+
+/**
+ * 
+ * Browser
+ */
 gulp.task('browser:init', function browser_init(done) {
 	bs.init({
-		baseDir: 'build/',
+		baseDir: MIX.build_folter,
 		proxy: MIX.url,
 		notify: false,
 		injectChanges: true,
@@ -261,6 +275,7 @@ gulp.task('browser:reload', function browser_reload(done) {
 
 
 /**
+ * 
  * Development
  */
 gulp.task('dev', gulp.series(['clean:build', 'copy:vendors', 'js', 'sass', 'css', 'copy:data', 'copy:img', 'copy:others', 'browser:init'], function dev(done) {
@@ -282,6 +297,7 @@ gulp.task('dev', gulp.series(['clean:build', 'copy:vendors', 'js', 'sass', 'css'
 
 
 /**
+ * 
  * Build
  */
 
@@ -293,6 +309,7 @@ gulp.task('build', gulp.series(['clean:build', 'js', 'sass', 'css', 'copy:data',
 
 
 /**
+ * 
  * Zipear
  */
 gulp.task('zip:build', function zip_build() {

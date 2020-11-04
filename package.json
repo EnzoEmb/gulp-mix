@@ -33,10 +33,9 @@
     "gulp-plumber": "^1.2.1",
     "gulp-purgecss": "^1.2.0",
     "gulp-sass": "^4.1.0",
-    "gulp-terser": "^1.2.0",
+    "gulp-terser": "^1.4.1",
     "gulp-uglify": "^3.0.1",
-    "gulp-zip": "^5.0.2",
-    "through2": "^4.0.2"
+    "gulp-zip": "^5.0.2"
   },
   "dependencies": {
     "bootstrap": "^4.5.3",
