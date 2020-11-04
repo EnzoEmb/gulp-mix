@@ -1,5 +1,4 @@
 {
-
   "build_folder": "./build",
   "src_folder": "./src",
   "url": "http://gulp-mix.test/",
@@ -7,13 +6,12 @@
   "autoreload": true,
   "autoopen": true,
 
-
   "minify_html": true,
   "minify_js": true,
   "minify_css": true,
   "cache_bust": true,
+  "purge_css": true,
   "autoprefix_css": true,
-
 
   "js_bundles": {
     "vendor": [
@@ -25,5 +23,4 @@
       "src/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"
     ]
   }
-
 }

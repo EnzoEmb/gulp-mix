@@ -1,25 +1,10 @@
-/**
- * Setup
- */
-const PATH = "http://gulp-mix.test/";
-const PORT = 3000;
-const AUTORELOAD = true;
-const AUTOOPEN = false;
 
-// Files
-const MINIFY_HTML = false;
-const MINIFY_CSS = false;
-const MINIFY_JS = false;
-const PURGE_CSS = false;
-const CACHE_BUST = false;
-const AUTOPREFIX_CSS = true;
-const PARTIALS_HTML = true;
 const BUNDLE_JS = true;
 const BUNDLE_CSS = true;
 const ES6 = true;
 
 // Folders
-const BUILD = "build/";
+// const BUILD = "build/";
 const COPY_FOLDERS = [
 	"src/fonts/**/*.*",
 	"src/vendor/**/*.*",
@@ -52,7 +37,12 @@ const plumber = require('gulp-plumber');
 const npmDist = require('gulp-npm-dist');
 // const htmlPartial = require('gulp-html-partial');
 // const chePartial = require('../')
-const chePartial = require('./che-partials');
+// const chePartial = require('./che-partials');
+const chePartial = require('gulp-che-partial');
+
+const MIX = require('./mix.config.json');
+
+
 
 var src;
 
@@ -109,16 +99,16 @@ gulp.task('clean:img', function clean_img() {
  */
 gulp.task('css', function (done) {
 	if (BUNDLE_CSS) {
-		delete require.cache[require.resolve('./config.json')] // Borramos el caché
-		config = require('./config.json');
+		delete require.cache[require.resolve('./mix.config.json')] // Borramos el caché
+		config = require('./mix.config.json');
 
 		// Por cada elemento de JSON, creamos un bundle de CSS
-		Object.keys(config.css).forEach(function build_css(name) {
-			log(chalk.gray.bold('[CSS] Compilado ' + config.css[name]));
-			return gulp.src(config.css[name])
+		Object.keys(config.css_bundles).forEach(function build_css(name) {
+			log(chalk.gray.bold('[CSS] Compilado ' + config.css_bundles[name]));
+			return gulp.src(config.css_bundles[name])
 				.pipe(concat(name + '.css'))
-				.pipe(gulpif(MINIFY_CSS, cleanCSS({ compatibility: 'ie8' })))
-				.pipe(gulpif(PURGE_CSS, purgecss({
+				.pipe(gulpif(MIX.minify_css, cleanCSS({ compatibility: 'ie8' })))
+				.pipe(gulpif(MIX.purge_css, purgecss({
 					content: ['src/**/*.html', 'src/**/*.php', 'src/js/*.js']
 				})))
 				.pipe(gulp.dest("./build/css/"))
@@ -142,15 +132,15 @@ gulp.task('css', function (done) {
 gulp.task('js', function (done) {
 
 	if (BUNDLE_JS) {
-		delete require.cache[require.resolve('./config.json')] // Borramos el caché
-		config = require('./config.json');
+		delete require.cache[require.resolve('./mix.config.json')] // Borramos el caché
+		config = require('./mix.config.json');
 
 		// Por cada elemento de JSON, creamos un bundle de JS
-		Object.keys(config.js).forEach(function build_js(name) {
-			log(chalk.gray.bold('[JS] Compilado ' + config.js[name] + ' => ') + chalk.bgWhite.black.bold(name + '.js'));
-			return gulp.src(config.js[name], { allowEmpty: true })
+		Object.keys(config.js_bundles).forEach(function build_js(name) {
+			log(chalk.gray.bold('[JS] Compilado ' + config.js_bundles[name] + ' => ') + chalk.bgWhite.black.bold(name + '.js'));
+			return gulp.src(config.js_bundles[name], { allowEmpty: true })
 				.pipe(concat(name + '.js'))
-				.pipe(gulpif(MINIFY_JS, gulpif(ES6, terser(), uglify())))
+				.pipe(gulpif(MIX.minify_js, gulpif(ES6, terser(), uglify())))
 				.pipe(gulp.dest('./build/js/'))
 				.pipe(bs.stream({ match: "**/*.js" }));
 		});
@@ -185,12 +175,12 @@ gulp.task('copy:data', function copy_data(done) {
 			errorHandler: customErrorHandler
 		}))
 		.pipe(chePartial())
-		.pipe(gulpif(MINIFY_HTML, htmlmin({
+		.pipe(gulpif(MIX.minify_html, htmlmin({
 			collapseWhitespace: true,
 			removeComments: true,
 			removeScriptTypeAttributes: true,
 		})))
-		.pipe(gulpif(CACHE_BUST, cachebust({
+		.pipe(gulpif(MIX.cache_bust, cachebust({
 			type: 'timestamp'
 		})))
 
@@ -229,7 +219,7 @@ gulp.task('sass', gulp.series(function compile_sass(done) {
 		.pipe(sass({
 			outputStyle: 'expanded',
 		}).on('error', sass.logError))
-		.pipe(gulpif(AUTOPREFIX_CSS, autoprefixer()))
+		.pipe(gulpif(MIX.autoprefix_csss, autoprefixer()))
 		// .pipe(cleanCSS({ compatibility: 'ie8' }))
 		.pipe(gulp.dest("./src/css"));
 	// .pipe(bs.stream({match: "**/*.css"}));
@@ -243,11 +233,11 @@ gulp.task('sass', gulp.series(function compile_sass(done) {
 gulp.task('browser:init', function browser_init(done) {
 	bs.init({
 		baseDir: 'build/',
-		proxy: PATH,
+		proxy: MIX.url,
 		notify: false,
 		injectChanges: true,
-		open: AUTOOPEN ? 'local' : false,
-		port: PORT,
+		open: MIX.autoopen ? 'local' : false,
+		port: MIX.port,
 	});
 	done();
 });
@@ -255,7 +245,7 @@ gulp.task('browser:init', function browser_init(done) {
 
 
 gulp.task('browser:stream', function browser_stream(done) {
-	if (AUTORELOAD) {
+	if (MIX.autoreload) {
 		gulp.src("./src/css/*.css")
 			.pipe(bs.stream({ match: "**/*.css" }));
 	}
@@ -263,7 +253,7 @@ gulp.task('browser:stream', function browser_stream(done) {
 });
 
 gulp.task('browser:reload', function browser_reload(done) {
-	if (AUTORELOAD) {
+	if (MIX.autoreload) {
 		bs.reload();
 	}
 	done();
