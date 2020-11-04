@@ -3,7 +3,9 @@
   <img alt="gulp-mix" src="https://i.imgur.com/sb3Kgxo.png">
 </p>
 
+<center>
 Another Gulp boilerplate, with html partials, and image optimization (WIP)
+</center>
 
 
 ###  Tasks
