@@ -7,7 +7,7 @@
   "autoreload": true,
   "autoopen": true,
 
-  "minify_html": true,
+  "minify_html": false,
   "minify_js": true,
   "minify_css": true,
   "cache_bust": true,
@@ -20,8 +20,9 @@
     ]
   },
   "css_bundles": {
-    "vendor": [
-      "src/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"
+    "style": [
+      "src/vendor/normalize.css/normalize.css",
+      "src/assets/css/style.css"
     ]
   }
 }
