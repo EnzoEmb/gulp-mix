@@ -1,11 +1,10 @@
 
 <p align="center">
   <img alt="gulp-mix" src="https://i.imgur.com/sb3Kgxo.png">
-</p>
 
-<center>
+<p align="center">
 Another Gulp boilerplate, with html partials, and image optimization (WIP)
-</center>
+</p>
 
 
 ###  Tasks
