@@ -94,3 +94,10 @@ readme.md // inception
 - Live Reload .css changes 
 
 
+### Other preconfigurations
+- Base HTML header, body and footer setup
+- HTML and CSS to keep the footer at the bottom
+- JS and CSS fix to 100vh on mobile browsers
+- SASS placeholder mixin
+- SASS font default variable
+
