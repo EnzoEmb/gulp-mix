@@ -173,13 +173,13 @@ gulp.task('css', function (done) {
 				.pipe(gulpif(MIX.purge_css, purgecss({
 					content: [MIX.src_folder + '**/*.html', MIX.src_folder + '/**/*.php', MIX.assets_folder + '/js/*.js']
 				})))
-				.pipe(gulp.dest("./build/css/"))
+				.pipe(gulp.dest(MIX.build_folder+"/assets/css/"))
 			// .pipe(bs.stream({match: "**/*.css"}));
 		});
 	} else {
 		gulp.src('src/css/**/*', {
 			base: 'src/css'
-		}).pipe(gulp.dest('./build/css'))
+		}).pipe(gulp.dest(MIX.build_folder+'/assets/css'))
 		// .pipe(bs.stream({match: "**/*.css"}));
 	}
 
@@ -203,13 +203,13 @@ gulp.task('js', function (done) {
 			return gulp.src(config.js_bundles[name], { allowEmpty: true })
 				.pipe(concat(name + '.js'))
 				.pipe(gulpif(MIX.minify_js, gulpif(ES6, terser(), uglify())))
-				.pipe(gulp.dest('./build/js/'))
+				.pipe(gulp.dest(MIX.build_folder+'/assets/js/'))
 				.pipe(bs.stream({ match: "**/*.js" }));
 		});
 	} else {
 		gulp.src(MIX.assets_folder + '/js/**/*', {
 			base: MIX.assets_folder + '/js'
-		}).pipe(gulp.dest('./build/js'))
+		}).pipe(gulp.dest(MIX.build_folder+'/assets/js'))
 			.pipe(bs.stream({ match: "**/*.js" }));
 	}
 
