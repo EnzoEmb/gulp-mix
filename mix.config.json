@@ -10,7 +10,7 @@
   "minify_js": true,
   "minify_css": true,
   "cache_bust": true,
-  "purge_css": true,
+  "purge_css": false,
   "autoprefix_css": true,
 
   "js_bundles": {

@@ -5,10 +5,10 @@ const ES6 = true;
 
 // Folders
 // const BUILD = "build/";
-const COPY_FOLDERS = [
-	"src/fonts/**/*.*",
-	"src/vendor/**/*.*",
-];
+// const COPY_FOLDERS = [
+// 	"src/fonts/**/*.*",
+// 	"src/vendor/**/*.*",
+// ];
 
 
 
@@ -48,7 +48,7 @@ var src;
  */
 gulp.task('clean:build', function clean_build() {
 
-	log(chalk.white.bgRedBright.bold('Eliminado BUILD'));
+	log(chalk.black.bgHex('#df274e').bold('Eliminado BUILD'));
 	return del([
 		'build/',
 	]);
@@ -90,17 +90,18 @@ gulp.task('html:partials', function () {
  * 
  * Copy
  */
-gulp.task('copy:vendors', function () {
+gulp.task('copy:vendors', function () { // Copy files from node_modules to src/vendors
 	return gulp.src(npmDist(), { base: './node_modules/' })
 		.pipe(gulp.dest('./src/vendor'));
 });
-gulp.task('copy:others', function copy_others(done) {
-	gulp.src(COPY_FOLDERS, {
-		base: 'src'
-	})
-		.pipe(gulp.dest('./build/'));
-	done();
-});
+
+// gulp.task('copy:others', function copy_others(done) { //
+// 	gulp.src(COPY_FOLDERS, {
+// 		base: 'src'
+// 	})
+// 		.pipe(gulp.dest('./build/'));
+// 	done();
+// });
 
 gulp.task('copy:data', function copy_data(done) {
 	gulp.src(['src/**/*.html', 'src/**/*.php', '!src/partials/**/*'])
@@ -118,7 +119,7 @@ gulp.task('copy:data', function copy_data(done) {
 		})))
 
 		.pipe(gulp.dest('./build/'));
-	log(chalk.white.bgHex('#48a54b').bold('✓ Compilado HTML/PHP'));
+	log(chalk.black.bgHex('#9cdf27').bold('✓ Compilado HTML/PHP'));
 	done();
 });
 
@@ -128,7 +129,7 @@ gulp.task('copy:img', gulp.series('clean:img', function copy_images(done) {
 			errorHandler: customErrorHandler
 		}))
 		.pipe(gulp.dest('build/img'));
-	log(chalk.white.bgHex('#48a54b').bold('✓ Copiado IMG'));
+	log(chalk.black.bgHex('#9cdf27').bold('✓ Copiado IMG'));
 	done();
 }));
 
@@ -182,7 +183,7 @@ gulp.task('css', function (done) {
 		// .pipe(bs.stream({match: "**/*.css"}));
 	}
 
-	log(chalk.white.bgHex('#48a54b').bold('✓ Compilado CSS!'));
+	log(chalk.black.bgHex('#9cdf27').bold('✓ Compilado CSS!'));
 
 	done();
 });
@@ -212,7 +213,7 @@ gulp.task('js', function (done) {
 			.pipe(bs.stream({ match: "**/*.js" }));
 	}
 
-	log(chalk.white.bgHex('#48a54b').bold('✓ Compilado JS!'));
+	log(chalk.black.bgHex('#9cdf27').bold('✓ Compilado JS!'));
 
 	done();
 });
@@ -233,7 +234,7 @@ gulp.task('sass', gulp.series(function compile_sass(done) {
 		.pipe(gulp.dest("./src/css"));
 	// .pipe(bs.stream({match: "**/*.css"}));
 
-	log(chalk.white.bgHex('#48a54b').bold('✓ Compilado SASS!'));
+	log(chalk.black.bgHex('#9cdf27').bold('✓ Compilado SASS!'));
 	done();
 }));
 
@@ -246,8 +247,8 @@ gulp.task('sass', gulp.series(function compile_sass(done) {
  */
 gulp.task('browser:init', function browser_init(done) {
 	bs.init({
-		baseDir: MIX.build_folter,
-		proxy: MIX.url,
+		baseDir: MIX.build_folder,
+		proxy: MIX.url + MIX.build_folder,
 		notify: false,
 		injectChanges: true,
 		open: MIX.autoopen ? 'local' : false,
@@ -255,8 +256,6 @@ gulp.task('browser:init', function browser_init(done) {
 	});
 	done();
 });
-
-
 
 gulp.task('browser:stream', function browser_stream(done) {
 	if (MIX.autoreload) {
@@ -278,7 +277,7 @@ gulp.task('browser:reload', function browser_reload(done) {
  * 
  * Development
  */
-gulp.task('dev', gulp.series(['clean:build', 'copy:vendors', 'js', 'sass', 'css', 'copy:data', 'copy:img', 'copy:others', 'browser:init'], function dev(done) {
+gulp.task('dev', gulp.series(['clean:build', 'copy:vendors', 'js', 'sass', 'css', 'copy:data', 'copy:img', 'browser:init'], function dev(done) {
 
 	gulp.watch(['src/**/*.scss'], gulp.series(['sass']));
 	gulp.watch(['src/**/*.css'], gulp.series(['css', 'browser:stream']));
@@ -289,7 +288,7 @@ gulp.task('dev', gulp.series(['clean:build', 'copy:vendors', 'js', 'sass', 'css'
 	gulp.watch(['src/**/*.php', 'src/**/*.html'], gulp.series(['copy:data', 'browser:reload']));
 
 	gulp.watch(['src/img/**/*'], gulp.series(['copy:img', 'browser:reload']));
-	gulp.watch(COPY_FOLDERS, gulp.series(['copy:others']));
+	// gulp.watch(COPY_FOLDERS, gulp.series(['copy:others']));
 
 	done();
 }));
@@ -301,7 +300,7 @@ gulp.task('dev', gulp.series(['clean:build', 'copy:vendors', 'js', 'sass', 'css'
  * Build
  */
 
-gulp.task('build', gulp.series(['clean:build', 'js', 'sass', 'css', 'copy:data', 'copy:img', 'copy:others'], function (done) {
+gulp.task('build', gulp.series(['clean:build', 'js', 'sass', 'css', 'copy:data', 'copy:img'], function (done) {
 	done();
 }));
 
@@ -313,14 +312,16 @@ gulp.task('build', gulp.series(['clean:build', 'js', 'sass', 'css', 'copy:data',
  * Zipear
  */
 gulp.task('zip:build', function zip_build() {
-	return gulp.src(['./build/**'])
+	return gulp.src([MIX.build_folder + '/**'])
 		.pipe(zip('build.zip'))
 		.pipe(gulp.dest('./'))
 });
 gulp.task('zip:all', function zip_all() {
 	return gulp.src([
+		'./**/*',
 		'!./node_modules/**',
 		'!./node_modules/',
+		'!*.zip',
 	])
 		.pipe(zip('src.zip'))
 		.pipe(gulp.dest('./'))
