@@ -1,95 +1,94 @@
-#  Layton Boilerplate
 
-Boilerplate para Frontend basado en Gulp 4, con setup inicial de scripts y estilos.
+<p align="center">
+  <img alt="gulp-mix" src="https://i.imgur.com/sb3Kgxo.png">
+</p>
 
-##  Requerimientos
-
-- Node JS (https://nodejs.org/es/)
-
-- NPM (https://www.npmjs.com/)
-
- 
-
-##  Instalación
+Another Gulp boilerplate, with html partials, and image optimization (WIP)
 
 
-1. Clonar el repositorio en tu proyecto (git clone https://Layt@bitbucket.org/Layt/layton.git)
+###  Tasks
+``` bash
+#Init server
+gulp dev
 
-2. Entrar en la carpeta y tirar el comando **npm install**
+#Build project
+gulp compile
 
-3. Si el comando gulp no funciona, instalarlo globalmente: npm install -g gulp-cli
+#ZIP build folder
+gulp zip:build
 
-
-##  Uso
-En ningún caso debes comitear o subir a producción la carpeta /node_modules/ ni /temp/. Puedes utilizar los comandos de compresión para obtener solo los archivos necesarios. De lo posible solo subir los archivos dentro de /build/ al sitio.
-
-###  Comandos
-
-    #Iniciar el proyecto
-    gulp dev
-    
-    #Compilar el proyecto
-    gulp compile
-
-    #Crear .zip del build
-    gulp zip:build
-    
-    #Crear .zip de todo
-    gulp zip:all
+#ZIP all (except node_modules)
+gulp zip:all
+```
   
 
-###  Partials
+###  HTML Partials
+Using gulp-che-partials to convert HTML partial tags like this:
+``` html
 
-Se incluye un sistema para hacer includes de archivos .HTML, por ejemplo, para no repetir el código del header.
-	
-    #Condicional
-    const PARTIALS_HTML = true
-    
-    #Uso básico
-    @@include('./partials/_header.html')
-    
-Más información: https://github.com/haoxins/gulp-file-include#readme
+<!-- index.html -->
+<partial src="partials/header.html" myTitle="Hello World">My Content</partial>
 
 
-###  Variables
+<!-- partials/header.html -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{myTitle}}</title>
 
-**PURGE_CSS:** Funcion experimental que elimina el css que no se esta utilizando, recorre todos los archivos HTML, PHP y JS y luego toma el CSS y solo deja las clases que estan en uso.
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
 
-**CACHE_BUST:** Añade un parametro random a todas los links y scripts incluidos en los HTML, PHP.
+```
 
-**COPY_FOLDER:** Añade las carpetas que se copiaran al build, por defecto copia los HTML y las carpetas img, js, css.
-  
+⇓ Turns into ⇓
 
-##  Changelog
+``` html
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World</title>
 
-#### 1.0.1
-- 🐛 Se copiaba la carpeta partials al build
-- 🐛 No se copiaba la carpeta img
-- 🐛 No se copiaban bien los COPY_FOLDER
-- 🐛 No se inyectaba el CSS
-- 🎉 Añadida opción si no se necesita bundlear CSS o JS
-- 🎉 Añadido plumber para logear los errores
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
 
-#### 1.0.0
+```
 
-- 🚀 Version inicial
-- 🐱‍ Crear custom bundles para CSS
-- 😢 Borrar carpeta build antes de recompilar
-- 🧾 Minificar HTML
-- 🕐 Versionado de Assets
-- ⚙ Variables de setup iniciales
-- ⛑ PurgeCSS
-- 🗜 ZIP:build ZIP:all
-- 🦴 Partials
 
-## Para hacer
-- Copiar las vistas y el resto de assets en el build.
-- Que el dev funcione solo en el SRC no en el build (?) - Descartado
-- Critical CSS.
-- Optimizar imagenes, WEBP?
-- Headless, constante para poner el build donde sea.
-- Prevenir explosion si no existe el partial.
-- Rebuildear solo las partes necesarias (?)
-- A veces tirar error las imagenes, quizas porque las rebuildea cada vez y tarda
-- Al cambiar nombre de imagen explota
-- https://www.npmjs.com/package/gulp-changed
+### Scaffolding
+
+``` javascript
+/build // where the build ends up (configurable)
+
+/src // main project files (configurable)
+/src/vendor // copy of npm dependencies scripts
+/src/partials // all partial templates
+/src/assets // js, css, sass files
+
+gulpfile.js // gulpfile setup
+mix.config.js // gulp-mix configurations
+readme.md // inception
+
+
+```
+
+### Features
+
+**🎨 CSS**  
+- Convert .scss to css 
+- Autoprefix css 
+- Minify css 
+
+**🌋 JS**  
+-  Minify and concatenate JS files 
+
+**🎳 HTML**
+- Minify HTML 
+- Cache Bust 
+- HTML Partials 
+- Browser Sync server 
+- Live Reload .css changes 
+
+

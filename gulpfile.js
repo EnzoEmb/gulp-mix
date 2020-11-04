@@ -231,7 +231,7 @@ gulp.task('sass', gulp.series(function compile_sass(done) {
 		}).on('error', sass.logError))
 		.pipe(gulpif(MIX.autoprefix_csss, autoprefixer()))
 		// .pipe(cleanCSS({ compatibility: 'ie8' }))
-		.pipe(gulp.dest(MIX.assets_folder + "css"));
+		.pipe(gulp.dest(MIX.assets_folder + "/css"));
 	// .pipe(bs.stream({match: "**/*.css"}));
 
 	log(chalk.black.bgHex('#9cdf27').bold('✓ Compilado SASS!'));
