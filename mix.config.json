@@ -1,6 +1,7 @@
 {
   "build_folder": "./build",
   "src_folder": "./src",
+  "assets_folder": "./src/assets",
   "url": "http://gulp-mix.test/",
   "port": 3000,
   "autoreload": true,
