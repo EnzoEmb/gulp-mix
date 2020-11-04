@@ -1,6 +1,4 @@
 // Vendors
-@import '../../vendor/normalize.css/normalize';
-
 @import "src/vars";
 @import "src/footer";
 @import "src/header";
@@ -9,4 +7,12 @@ body {
     font-family: $font-default;
     scroll-behavior: smooth;
     background-color: #f7f6f3;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+#main-wrapper{
+    padding: 50px;
 }
